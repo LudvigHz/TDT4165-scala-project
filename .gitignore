@@ -1,7 +1,8 @@
 *.class
 *.log
 .metals
-project
-target
+project_tasks/target
+project_tasks/project/project
+project_tasks/project/target
 .bsp
 .bloop
