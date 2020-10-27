@@ -1,0 +1,27 @@
+name: Scala CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+defaults:
+  run:
+    working-directory: project_tasks
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Formatting (Scalafmt)
+        run: sbt scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
+
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: sbt test
