@@ -16,8 +16,15 @@ object Main extends App {
       sumRecursion(values.tail, partialSum + values.head)
     }
   }
-  // The reason for using BigInt is that fibonacci numbers tend to get quite large very quickly
-  // Thus BigInt is required in order to avoid overflow
+
+  /*
+   * The reason for using BigInt is that factorials tend to get quite large very quickly
+   * Thus BigInt is required in order to avoid overflow.
+   *
+   * This implementation will recursively calculate the previous 2 numbers in the sequence, which
+   * means that the function will have a performance of O(2^n).
+   * Using optimizations, we can reduce this to at least O(n)
+   */
   def fib(N: Int): BigInt = {
     if (N == 0) {
       N
