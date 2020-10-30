@@ -1,6 +1,7 @@
-// TODO: task 1
+import scala.annotation.tailrec
+
 object Main extends App {
-  val generateValues = (1 to 50).toList
+  val oneToFifty: List[Int] = for { value <- (1 to 50).toList } yield value
   def sumForLoop(ints: List[Int]) = {
     var sum: Int = 0
     for (int <- ints) {
@@ -8,23 +9,22 @@ object Main extends App {
     }
     sum
   }
-  def sumRecursion(values: List[Int], partialSum: Int): Int = {
+  @tailrec def sumRecursion(values: List[Int], partialSum: Int = 0): Int = {
     if (values.isEmpty) {
       partialSum
     } else {
-      funcC(values.tail, partialSum + values.head)
+      sumRecursion(values.tail, partialSum + values.head)
     }
   }
-  // The reason for using BigInt is that factorials tend to get quite large very quickly
+  // The reason for using BigInt is that fibonacci numbers tend to get quite large very quickly
   // Thus BigInt is required in order to avoid overflow
   def fib(N: Int): BigInt = {
-    def fibTailRec(N: Int, accumulator: BigInt): BigInt = {
-      if (N == 0) {
-        accumulator
-      } else {
-        fibTailRec(N - 1, accumulator * N)
-      }
+    if (N == 0) {
+      N
+    } else if (N == 1) {
+      N
+    } else {
+      fib(N - 1) + fib(N - 2)
     }
-    fibTailRec(N, 1)
   }
 }
