@@ -7,7 +7,7 @@ class Bank(val allowedAttempts: Integer = 3) {
       transactionsQueue.push(
         new Transaction(transactionsQueue, processedTransactions, from, to, amount, allowedAttempts)
       )
-      val thread = new Thread {
+      var thread = new Thread {
           processTransactions
       }
       thread.run()
@@ -19,9 +19,11 @@ class Bank(val allowedAttempts: Integer = 3) {
 
   private def processTransactions: Unit = {
       var transaction = transactionsQueue.pop
+      var thread = new Thread {
+          transaction.run()
+      }
       if(transaction.status == TransactionStatus.PENDING) {
           transactionsQueue.push(transaction)
-          processTransactions
       }
       else {
           processedTransactions.push(transaction)

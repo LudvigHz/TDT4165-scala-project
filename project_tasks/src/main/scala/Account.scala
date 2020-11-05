@@ -20,7 +20,7 @@ class Account(val bank: Bank, initialBalance: Double) {
         }
         else {
             balance.amount -= amount
-            Left(balance.amount)
+            Left(amount)
         }
       }
   }
@@ -31,7 +31,7 @@ class Account(val bank: Bank, initialBalance: Double) {
             Right("cannot deposit negative value")
          } else {
             balance.amount += amount
-            Left(balance.amount)
+            Left(amount)
          }
       }
   }
