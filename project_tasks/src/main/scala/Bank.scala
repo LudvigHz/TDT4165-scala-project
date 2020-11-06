@@ -3,39 +3,51 @@ class Bank(val allowedAttempts: Integer = 3) {
   private val transactionsQueue: TransactionQueue = new TransactionQueue()
   private val processedTransactions: TransactionQueue = new TransactionQueue()
 
-  def addTransactionToQueue(from: Account, to: Account, amount: Double): Unit = {
-      transactionsQueue.push(
-        new Transaction(transactionsQueue, processedTransactions, from, to, amount, allowedAttempts)
-      )
-      var thread = new Thread {
-          processTransactions
-      }
-      thread.run()
-  }
   // TODO
   // project task 2
   // create a new transaction object and put it in the queue
   // spawn a thread that calls processTransactions
-
-  private def processTransactions: Unit = {
-      var transaction = transactionsQueue.pop
-      var thread = new Thread {
-          transaction.run()
-      }
-      if(transaction.status == TransactionStatus.PENDING) {
-          transactionsQueue.push(transaction)
-      }
-      else {
-          processedTransactions.push(transaction)
-      }
+  def addTransactionToQueue(
+      from: Account,
+      to: Account,
+      amount: Double
+  ): Unit = {
+    transactionsQueue.push(
+      new Transaction(
+        transactionsQueue,
+        processedTransactions,
+        from,
+        to,
+        amount,
+        allowedAttempts
+      )
+    )
+    Main.thread {
+      processTransactions
+    }
   }
 
-  // TOO
+  // TODO
   // project task 2
   // Function that pops a transaction from the queue
   // and spawns a thread to execute the transaction.
   // Finally do the appropriate thing, depending on whether
   // the transaction succeeded or not
+  private def processTransactions: Unit = {
+    println("hehe")
+    var transaction = transactionsQueue.pop
+    val t: Thread = Main.thread { transaction.run }
+    if (
+      transaction.synchronized {
+        transaction.status == TransactionStatus.PENDING
+      }
+    ) {
+      transactionsQueue.push(transaction)
+      processTransactions
+    } else {
+      processedTransactions.push(transaction)
+    }
+  }
 
   def addAccount(initialBalance: Double): Account = {
     new Account(this, initialBalance)
@@ -44,5 +56,4 @@ class Bank(val allowedAttempts: Integer = 3) {
   def getProcessedTransactionsAsList: List[Transaction] = {
     processedTransactions.iterator.toList
   }
-
 }

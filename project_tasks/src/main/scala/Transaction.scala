@@ -14,38 +14,41 @@ class TransactionQueue {
 
   // Remove and return the first element from the queue
   def pop: Transaction = {
-      queue.synchronized {
-          queue.dequeue
-      }
+    queue.synchronized {
+      queue.dequeue
+    }
   }
 
   // Return whether the queue is empty
   def isEmpty: Boolean = {
-      queue.synchronized {
-          queue.isEmpty
-      }
+    queue.synchronized {
+      queue.isEmpty
+    }
   }
 
   // Add new element to the back of the queue
   def push(t: Transaction): Unit = {
-      queue.synchronized {
-          queue += t
-      }
+    queue.synchronized {
+      queue.enqueue(t)
+    }
   }
 
   // Return the first element from the queue without removing it
   def peek: Transaction = {
-      queue.synchronized {
-          queue.head
-      }
+    queue.synchronized {
+      queue.head
+    }
   }
 
   // Return an iterator to allow you to iterate over the queue
   def iterator: Iterator[Transaction] = {
-      queue.synchronized {
-          queue.iterator
-      }
+    queue.synchronized {
+      queue.iterator
+    }
   }
+
+  override def toString =
+    queue.toString
 }
 
 class Transaction(
@@ -62,47 +65,45 @@ class Transaction(
 
   override def run: Unit = {
 
-
     def doTransaction: Unit = {
       // TODO - project task 3
       // Extend this method to satisfy requirements.
       from withdraw amount match {
-          case Left(_) => {
-               to deposit amount match {
-                  case Left(_) => {
-                     status = TransactionStatus.SUCCESS
-                  }
-                  case Right(error) => {
-                       if(attempt < allowedAttempts) {
-                           attempt += 1
-                           doTransaction
-                       } else {
-                           status = TransactionStatus.FAILED
-                       }
-                  }
-               }
-           }
-           case Right(error) => {
-               if(attempt < allowedAttempts) {
-                   attempt += 1
-                   doTransaction
-               } else {
-                   status = TransactionStatus.FAILED
-               }
-          
-           }
+        case Left(_) => {
+          to deposit amount match {
+            case Left(_) => {
+              status = TransactionStatus.SUCCESS
+            }
+            case Right(error) => {
+              if (attempt < allowedAttempts) {
+                attempt += 1
+              } else {
+                status = TransactionStatus.FAILED
+              }
+            }
+          }
         }
+        case Right(error) => {
+          if (attempt < allowedAttempts) {
+            attempt += 1
+          } else {
+            status = TransactionStatus.FAILED
+          }
+
+        }
+      }
     }
 
     // TODO - project task 3
     // make the code below thread safe
-    status.synchronized {
-        if (status == TransactionStatus.PENDING) {
-            doTransaction
-
-            Thread.sleep(50) // you might want this to make more room for
-            // new transactions to be added to the queue
-        }
+    this.synchronized {
+      println("hoho")
+      if (status == TransactionStatus.PENDING) {
+        println("test")
+        doTransaction
+        Thread.sleep(50) // you might want this to make more room for
+        // new transactions to be added to the queue
+      }
     }
 
   }
