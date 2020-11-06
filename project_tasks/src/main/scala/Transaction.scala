@@ -97,9 +97,7 @@ class Transaction(
     // TODO - project task 3
     // make the code below thread safe
     this.synchronized {
-      println("hoho")
       if (status == TransactionStatus.PENDING) {
-        println("test")
         doTransaction
         Thread.sleep(50) // you might want this to make more room for
         // new transactions to be added to the queue

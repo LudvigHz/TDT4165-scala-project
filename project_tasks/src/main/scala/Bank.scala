@@ -34,7 +34,6 @@ class Bank(val allowedAttempts: Integer = 3) {
   // Finally do the appropriate thing, depending on whether
   // the transaction succeeded or not
   private def processTransactions: Unit = {
-    println("hehe")
     var transaction = transactionsQueue.pop
     val t: Thread = Main.thread { transaction.run }
     if (
