@@ -35,12 +35,12 @@ class Bank(val allowedAttempts: Integer = 3) {
   // the transaction succeeded or not
   private def processTransactions: Unit = {
     var transaction = transactionsQueue.pop
-    val t: Thread = Main.thread { transaction.run }
     if (
       transaction.synchronized {
         transaction.status == TransactionStatus.PENDING
       }
     ) {
+      Main.thread { transaction.run }
       transactionsQueue.push(transaction)
       processTransactions
     } else {

@@ -103,6 +103,5 @@ class Transaction(
         // new transactions to be added to the queue
       }
     }
-
   }
 }
