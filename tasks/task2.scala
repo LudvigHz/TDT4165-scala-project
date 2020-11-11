@@ -3,10 +3,6 @@ object Task2 extends App {
   def increaseCounter(): Unit = {
     counter += 1
   }
-  // Thread safe increaseCounter
-  def increaseCounterSafe(): Unit = counter.synchronized {
-    counter += 1
-  }
   def printCounter(): Unit = {
     println(this.counter)
   }
@@ -18,12 +14,18 @@ object Task2 extends App {
       }
     }
   }
-  // Nonsafe increaseCounter. This causes a race condition, ie when the result of
-  // a program depends on which thread finishes first
+  // Nonsafe increaseCounter. This causes a race condition, which is when the results of an operation
+  // depends on the timing of events outside of our control. Here this happens as the value printed depends
+  // on the order of execution for the thread operations, which varies.
   /*
   val thread1: Thread = threadFunction(increaseCounter)
   val thread2: Thread = threadFunction(increaseCounter)
    */
+  // Thread safe increaseCounter
+  def increaseCounterSafe(): Unit = counter.synchronized {
+    counter += 1
+  }
+  // Safe threads
   val thread1: Thread = threadFunction(increaseCounterSafe)
   val thread2: Thread = threadFunction(increaseCounterSafe)
   val printThread: Thread = threadFunction(printCounter)
@@ -39,7 +41,7 @@ object Task2 extends App {
    * waiting for a another thread to relinquish control of a resource.
    */
 
-  // Function that causes a deadlock by utalizing lazy variables
+  // Function that causes a deadlock by utilizing lazy variables
   def lazyDeadlock(): Unit = {
     object testA { lazy val test: Int = testB.test }
     object testB { lazy val test: Int = testA.test }
