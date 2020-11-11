@@ -14,11 +14,13 @@ object Task2 extends App {
       }
     }
   }
-  // Nonsafe increaseCounter. This causes a race condition, which is when the results of an operation
+  // Unsafe threads
+  // These threads cause a race condition, which is when the results of an operation
   // depends on the timing of events outside of our control. Here this happens as the value printed depends
   // on the order of execution for the thread operations, which varies.
   /*
   val thread1: Thread = threadFunction(increaseCounter)
+  val printThread: Thread = threadFunction(printCounter)
   val thread2: Thread = threadFunction(increaseCounter)
    */
   // Thread safe increaseCounter
@@ -29,11 +31,10 @@ object Task2 extends App {
   val thread1: Thread = threadFunction(increaseCounterSafe)
   val thread2: Thread = threadFunction(increaseCounterSafe)
   val printThread: Thread = threadFunction(printCounter)
-  /*
   thread1.start()
-  printThread.start() // Should print 1, but can print 2 if threadFunction is not thread safe
+  printThread
+    .start() // Should print 1, but can print 2 if increaseCounter is not thread safe
   thread2.start()
-   */
   /*
    * A deadlock is a situation where a several threads wait forever, as they each wait for the lock on
    * another variable held by another of the waiting threads. It can be avoided by having a total ordering on
