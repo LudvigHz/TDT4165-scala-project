@@ -31,12 +31,10 @@ object Main extends App {
    * Using optimizations, we can reduce this to at least O(n)
    */
   def fib(N: Int): BigInt = {
-    if (N == 0) {
-      N
-    } else if (N == 1) {
-      N
-    } else {
-      fib(N - 1) + fib(N - 2)
+    N match {
+      case 0 => N
+      case 1 => N
+      case _ => fib(N - 1) + fib(N - 2)
     }
   }
 }
