@@ -31,7 +31,11 @@ object Task2 extends App {
    * results of an operation depends on the timing of events outside of our control.
    * here this happens because the value printed depends
    * on the order of execution for the thread operations, which is non-deterministic.
-   *
+   * This is problematic if you have two threads who want to withdraw all the money from an account.
+   * If you are unlucky, both will check that the balance is equal to the amount
+   * that will be withdrawn, before any of them can withdraw money from the account.
+   * The two threads will then both withdraw an amount equal to the entire balance,leading to the account
+   * having a negative balance, which might be an illegal state.
    */
 
   // c) Thread safe increaseCounter
